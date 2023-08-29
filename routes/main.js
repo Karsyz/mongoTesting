@@ -7,6 +7,7 @@ const homeController = require("../controllers/home");
 router.get("/", homeController.getIndex);
 router.get("/rooms", homeController.getRooms);
 router.get("/vacantRooms", homeController.vacantRooms);
+router.get("/occupiedRooms", homeController.occupiedRooms);
 
 router.post("/createUser/:name", homeController.createUser);
 // router.post("/createABunchOfUsers", homeController.createABunchOfUsers);

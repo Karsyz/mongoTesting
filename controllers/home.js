@@ -104,6 +104,21 @@ module.exports = {
     }
   }, 
 
+  occupiedRooms: async (req, res) => {
+    try {
+      const occupiedRooms = await Room.find({vacant: false})
+
+      res.status(200).json({
+        ok: true,
+        message: "Here are all of the occupied rooms",
+        data: occupiedRooms
+      });
+      
+    } catch (error) {
+      console.error(error)
+    }
+  }, 
+
   // adds vacant property to object in Room collection
   updateRooms: async (req, res) => {
     try {
@@ -173,7 +188,7 @@ module.exports = {
     }
   },
 
-
+  
   unassignRoom: async (req, res) => {
     try {
       // get the current user object
