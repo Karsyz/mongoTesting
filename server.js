@@ -9,6 +9,7 @@ const methodOverride = require("method-override");
 const logger = require("morgan");
 const connectDB = require("./config/database");
 const mainRoutes = require("./routes/main");
+const cors = require('cors');
 
 //Use .env file in config folder
 require("dotenv").config({ path: "./config/.env" });
@@ -41,6 +42,18 @@ app.use(express.static("public"));
 
 //Body Parsing
 app.use(express.urlencoded({ extended: true }));
+
+app.options('*', cors())
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers', 
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
+
 app.use(express.json());
 
 //Logging

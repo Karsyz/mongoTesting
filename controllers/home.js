@@ -104,6 +104,7 @@ module.exports = {
     }
   }, 
 
+
   occupiedRooms: async (req, res) => {
     try {
       const occupiedRooms = await Room.find({vacant: false})
@@ -140,7 +141,6 @@ module.exports = {
       console.error(error)
     }
   },
-
 
   assignRoom: async (req, res) => {
 
