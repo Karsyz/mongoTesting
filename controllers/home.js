@@ -58,8 +58,9 @@ module.exports = {
   createRoom: async (req, res, next) => {
     // get array of existing rooms and sort high to low
     const existingRooms = await Room.find()
-    const nextRoomNumber = existingRooms.map(e => e.roomNumber).sort((a,b) => b - a )[0] + 1
-    // console.log(nextRoomNumber)
+    console.log(existingRooms)
+    const nextRoomNumber = existingRooms.length > 0 ? existingRooms.map(e => e.roomNumber).sort((a,b) => b - a )[0] + 1 : 101
+    console.log(nextRoomNumber)
 
     const room = new Room({
       roomNumber: nextRoomNumber,
@@ -75,6 +76,32 @@ module.exports = {
   });
   },
 
+  deleteRoom: async (req, res, next) => {
+    // const roomNum = Number(req.params.roomNum)
+    const existingRooms = await Room.find()
+    const highestRoomNum = existingRooms.map(e => e.roomNumber).sort((a,b) => b - a )[0]
+    const room = await Room.findOne({roomNumber: highestRoomNum})
+    
+    
+    // unassign if assigned
+    const userInRoom = await User.findOne({room: room.id})
+    if(userInRoom) {
+      userInRoom.room = ""
+      await userInRoom.save()
+    }
+    console.log(userInRoom)
+    
+    
+    // delete room from db
+    const deletedRoom = await Room.findOneAndDelete({roomNumber: highestRoomNum})
+
+    res.status(200).json({
+      ok: true,
+      message: `Room ${highestRoomNum} has been deleted in the database.`,
+      data: deletedRoom,
+    });
+  },
+
 
   getRooms: async (req, res) => {
     let sayhello = "Here are all of the rooms in the database"
@@ -88,6 +115,8 @@ module.exports = {
 
     });
   },
+
+  
 
   vacantRooms: async (req, res) => {
     try {
